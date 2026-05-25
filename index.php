@@ -1,19 +1,41 @@
 <?php
 include 'config.php';
-$posts = get_posts($conn);
+
+$page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
+$search = isset($_GET['search']) ? sanitize($_GET['search']) : '';
+
+$offset = ($page - 1) * POSTS_PER_PAGE;
+
+if ($search) {
+    $posts = search_posts($conn, $search, POSTS_PER_PAGE, $offset);
+    $total_posts = search_count($conn, $search);
+} else {
+    $posts = get_posts($conn, POSTS_PER_PAGE, $offset);
+    $total_posts = get_post_count($conn);
+}
+
+$total_pages = ceil($total_posts / POSTS_PER_PAGE);
+$stats = get_blog_stats($conn);
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Blog</title>
+    <title><?php echo $search ? "Search: $search - " : ''; ?>My Professional Blog</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
         <div class="container">
-            <h1>📚 My Blog</h1>
+            <h1>📚 Professional Tech Blog</h1>
+            <p class="tagline">Sharing insights on web development, coding best practices, and tech trends</p>
+            
+            <form method="GET" class="search-form">
+                <input type="text" name="search" placeholder="Search posts..." value="<?php echo htmlspecialchars($search); ?>" />
+                <button type="submit">🔍 Search</button>
+            </form>
+
             <nav>
                 <a href="index.php">Home</a>
                 <a href="admin.php">Admin</a>
@@ -23,7 +45,23 @@ $posts = get_posts($conn);
 
     <main>
         <div class="container">
-            <h2>Latest Posts</h2>
+            <div class="blog-stats">
+                <div class="stat">
+                    <strong><?php echo $stats['posts']; ?></strong>
+                    <span>Published Posts</span>
+                </div>
+                <div class="stat">
+                    <strong><?php echo $stats['comments']; ?></strong>
+                    <span>Comments</span>
+                </div>
+            </div>
+
+            <?php if ($search): ?>
+                <h2>Search Results for: <em><?php echo htmlspecialchars($search); ?></em></h2>
+                <p class="result-count">Found <?php echo $total_posts; ?> post(s)</p>
+            <?php else: ?>
+                <h2>Latest Posts</h2>
+            <?php endif; ?>
             
             <?php if ($posts): ?>
                 <div class="posts-grid">
@@ -31,22 +69,40 @@ $posts = get_posts($conn);
                         <article class="post-card">
                             <h3><?php echo htmlspecialchars($post['title']); ?></h3>
                             <p class="meta">
-                                By <?php echo htmlspecialchars($post['author']); ?> 
+                                By <strong><?php echo htmlspecialchars($post['author']); ?></strong> 
                                 on <?php echo date('F d, Y', strtotime($post['created_at'])); ?>
                             </p>
-                            <p class="excerpt"><?php echo htmlspecialchars(substr($post['content'], 0, 150)) . '...'; ?></p>
+                            <p class="excerpt"><?php echo htmlspecialchars(substr(strip_tags($post['content']), 0, 150)) . '...'; ?></p>
                             <a href="post.php?id=<?php echo $post['id']; ?>" class="read-more">Read More →</a>
                         </article>
                     <?php endforeach; ?>
                 </div>
+
+                <!-- Pagination -->
+                <?php if ($total_pages > 1): ?>
+                    <div class="pagination">
+                        <?php if ($page > 1): ?>
+                            <a href="index.php?page=1<?php echo $search ? "&search=" . urlencode($search) : ''; ?>" class="page-link">« First</a>
+                            <a href="index.php?page=<?php echo $page - 1; ?><?php echo $search ? "&search=" . urlencode($search) : ''; ?>" class="page-link">‹ Previous</a>
+                        <?php endif; ?>
+
+                        <span class="page-info">Page <?php echo $page; ?> of <?php echo $total_pages; ?></span>
+
+                        <?php if ($page < $total_pages): ?>
+                            <a href="index.php?page=<?php echo $page + 1; ?><?php echo $search ? "&search=" . urlencode($search) : ''; ?>" class="page-link">Next ›</a>
+                            <a href="index.php?page=<?php echo $total_pages; ?><?php echo $search ? "&search=" . urlencode($search) : ''; ?>" class="page-link">Last »</a>
+                        <?php endif; ?>
+                    </div>
+                <?php endif; ?>
             <?php else: ?>
-                <p>No posts available.</p>
+                <p class="no-posts">No posts available. Check back soon!</p>
             <?php endif; ?>
         </div>
     </main>
 
     <footer>
-        <p>&copy; 2026 My Blog. All rights reserved.</p>
+        <p>&copy; 2026 Professional Tech Blog. All rights reserved. | Built with PHP & MySQL</p>
     </footer>
 </body>
 </html>
+
