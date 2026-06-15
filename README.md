@@ -1,352 +1,263 @@
-# 📚 Professional Blog Platform - PHP + MySQL
+# BlogHub - PHP Blog Platform
 
-![PHP](https://img.shields.io/badge/PHP-7.4+-blue?style=flat-square&logo=php)
-![MySQL](https://img.shields.io/badge/MySQL-5.7+-orange?style=flat-square&logo=mysql)
-![HTML5](https://img.shields.io/badge/HTML5-Latest-red?style=flat-square&logo=html5)
-![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
+**BlogHub** is a professional, modern blog platform built with PHP and SQL Server. Create, manage, and publish blog posts with an intuitive admin panel and feature-rich public interface.
 
-A powerful, feature-rich blog platform built with PHP and MySQL. Perfect for content creators and developers who want to publish articles with full admin control.
+## 🎯 Features
 
-## ✨ Features
+- 📝 **Full Blog Management** - Create, edit, publish, and delete posts
+- 🔍 **Advanced Search** - Search posts by title and content with pagination
+- 💬 **Comment System** - Readers can submit comments (admin approval required)
+- 👤 **Admin Panel** - Secure admin interface with password protection
+- 📊 **Statistics** - Display blog stats (post count, comment count)
+- 🔒 **Security** - CSRF token protection, input sanitization, SQL Server parameterized queries
+- 📱 **Responsive Design** - Works on desktop, tablet, and mobile
+- 🎨 **Professional Styling** - Clean, modern CSS design
+- ⚡ **Performance** - Optimized queries with proper indexing
 
-### For Readers
-- 📖 **Beautiful Blog Homepage** - Modern, responsive design
-- 🔍 **Search Functionality** - Find posts by keyword
-- 📄 **Pagination** - Browse posts efficiently
-- 🏷️ **Post Categories** - Organize content by topic
-- 📊 **Blog Statistics** - View total posts and comments
-- 📱 **Mobile Responsive** - Works on all devices
+## 📋 Tech Stack
 
-### For Admin
-- ✏️ **Create Posts** - Rich content management
-- 📝 **Edit/Delete Posts** - Full control over content
-- 🔒 **Secure Login** - Password-protected admin panel
-- 📊 **Content Dashboard** - Manage all posts at a glance
-- 💬 **Comment Moderation** - Approve/manage comments
-- 📈 **Analytics** - Track posts and engagement
-
-## 🛠️ Tech Stack
-
-| Technology | Purpose |
-|-----------|---------|
-| **PHP 7.4+** | Server-side scripting |
-| **MySQL 5.7+** | Relational database |
-| **HTML5** | Semantic markup |
-| **CSS3** | Modern styling with gradients |
-| **JavaScript** | Client-side interactivity |
-| **Apache/Nginx** | Web server |
-
-## 📋 Prerequisites
-
-- PHP 7.4 or higher
-- MySQL 5.7 or higher
-- Apache or Nginx web server (or PHP built-in server for local development)
-- Command line access
+| Component | Technology | Version |
+|-----------|-----------|---------|
+| Backend | PHP | 7.4+ |
+| Database | SQL Server | 2016+ |
+| ORM/Driver | PDO (sqlsrv) | Native |
+| Styling | CSS3 | - |
+| Frontend | HTML5 | - |
 
 ## 🚀 Quick Start
 
-### 1. Clone the Repository
+### Prerequisites
+
+- PHP 7.4+ with PDO and `sqlsrv` extension
+- SQL Server 2016 or later (or SQL Server Express)
+- Windows or Linux with SQL Server support
+
+### Installation
+
+#### 1. Database Setup
+
+**Option A: Using SQL Server Management Studio (SSMS)**
+- Open SSMS and connect to your SQL Server
+- Open a new query window
+- Copy and paste contents of `database_sqlserver.sql`
+- Execute the script
+
+**Option B: Using Command Line**
 ```bash
-git clone https://github.com/Rithi2024/blog-platform-php-mysql.git
-cd blog-platform-php-mysql
+sqlcmd -S localhost -U sa -P YourPassword123 -i database_sqlserver.sql
 ```
 
-### 2. Database Setup
+#### 2. Configure Connection
 
-Import the SQL file to create tables:
+Create `.env` file or set environment variables:
+
 ```bash
-mysql -u root -p < database.sql
+# Database Configuration
+set BLOG_DB_SERVER=localhost
+set BLOG_DB_PORT=1433
+set BLOG_DB_USER=sa
+set BLOG_DB_PASS=YourPassword123
+set BLOG_DB_NAME=BlogDB
+
+# Application Configuration
+set BLOG_BASE_URL=http://localhost:8000/
+set BLOG_ADMIN_PASS=admin123
+set BLOG_POSTS_PER_PAGE=5
 ```
 
-When prompted, enter your MySQL password.
+#### 3. Start PHP Server
 
-Alternatively, use phpMyAdmin:
-1. Open phpMyAdmin
-2. Create new database: `blog_db`
-3. Import `database.sql`
-
-### 3. Configure Database Connection
-
-Edit `config.php`:
-```php
-define('DB_HOST', 'localhost');     // Your database host
-define('DB_USER', 'root');          // Your database username
-define('DB_PASS', 'your_password'); // Your database password
-define('DB_NAME', 'blog_db');       // Database name
-define('ADMIN_PASS', 'admin123');   // Change this to a strong password!
-```
-
-### 4. Start the Server
-
-**Option A: Using PHP Built-in Server** (Local development)
 ```bash
 php -S localhost:8000
 ```
 
-**Option B: Using Apache**
-- Copy to: `/var/www/html/blog` (Linux) or `C:\xampp\htdocs\blog` (Windows)
-- Access: `http://localhost/blog`
+#### 4. Access the Blog
 
-### 5. Access the Blog
+- **Blog**: [http://localhost:8000](http://localhost:8000)
+- **Admin**: [http://localhost:8000/admin.php](http://localhost:8000/admin.php)
+  - Password: `admin123` (change before production!)
 
-- **Frontend**: http://localhost:8000
-- **Admin Panel**: http://localhost:8000/admin.php
-- **Admin Password**: `admin123` (change in `config.php`)
+## 📖 Usage
+
+### Public Blog Interface
+
+- **Browse Posts** - View all published posts with pagination
+- **Search** - Use the search bar to find posts by title or content
+- **Read Full Post** - Click "Read More" to view full post content
+- **View Comments** - See approved comments on posts
+- **Submit Comment** - Leave a comment (requires approval)
+
+### Admin Panel
+
+1. Click **Admin** link in header
+2. Enter admin password
+3. Available actions:
+   - ✅ **Create Post** - Add new blog post
+   - ✏️ **Edit Post** - Modify existing post
+   - 🗑️ **Delete Post** - Remove post
+   - 👁️ **View Posts** - List all posts with status
 
 ## 📁 Project Structure
 
 ```
-├── index.php              # Homepage - displays all posts
-├── post.php               # Single post view
-├── admin.php              # Admin panel - create/edit posts
-├── config.php             # Database configuration
-├── styles.css             # Main stylesheet
-├── database.sql           # Database schema and sample data
-├── .htaccess              # Apache URL rewriting rules
-└── README.md
+BlogHub-PHP/
+├── index.php              # Public blog homepage
+├── post.php               # Individual post view
+├── admin.php              # Admin panel
+├── config.php             # Database config & functions
+├── styles.css             # Stylesheet
+├── database_sqlserver.sql # SQL Server schema
+├── README.md              # Documentation
+└── .env.example           # Environment template
 ```
 
-## 📖 Usage Guide
+## 🔐 Security
 
-### Creating a Post
+### Built-in Security Features
 
-1. Go to Admin Panel: `http://localhost:8000/admin.php`
-2. Enter password: `admin123`
-3. Fill in post details:
-   - **Title**: Post headline
-   - **Author**: Your name
-   - **Content**: Post content (use line breaks for formatting)
-4. Click "Publish Post"
+- **Prepared Statements** - All queries use parameterized statements to prevent SQL injection
+- **Input Sanitization** - User input is trimmed and HTML tags stripped
+- **Output Encoding** - All output is HTML-escaped to prevent XSS
+- **CSRF Protection** - Sessions use CSRF tokens for state-changing operations
+- **Password Hashing** - (Recommended: upgrade to bcrypt for production)
 
-### Reading Posts
+### Security Checklist
 
-1. Homepage displays latest posts
-2. Click "Read More" to view full article
-3. Use search to find specific posts
-4. Use pagination to browse older posts
+- [ ] Change default admin password before deploying
+- [ ] Use HTTPS in production
+- [ ] Set `display_errors` to `0` in production
+- [ ] Restrict database user permissions (use separate read-only user for public)
+- [ ] Keep PHP and SQL Server updated
+- [ ] Use environment variables, not hardcoded credentials
+- [ ] Implement rate limiting on admin login
+- [ ] Regular database backups
 
-### Managing Posts
+## 🧪 Testing
 
-- View all posts in the admin dashboard
-- Edit any post
-- Delete posts with confirmation
+### Manual Testing Steps
 
-## 🔐 Security Features
+1. **Create a Post**
+   - Login to admin
+   - Fill in title, author, content
+   - Click "Create Post"
+   - Verify post appears on homepage
 
-- ✅ Input sanitization with `sanitize()` function
-- ✅ Password protection for admin panel
-- ✅ SQL prepared statements (recommended for production)
-- ✅ XSS protection with `htmlspecialchars()`
-- ✅ CSRF token support (ready to implement)
+2. **Search Functionality**
+   - Enter search term on homepage
+   - Verify results are filtered correctly
+   - Test pagination
 
-## 🗄️ Database Schema
-
-### Posts Table
-```sql
-CREATE TABLE posts (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    title VARCHAR(255) NOT NULL,
-    author VARCHAR(100) NOT NULL,
-    content LONGTEXT NOT NULL,
-    published TINYINT(1),
-    created_at TIMESTAMP,
-    updated_at TIMESTAMP
-);
-```
-
-### Comments Table
-```sql
-CREATE TABLE comments (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    post_id INT,
-    author VARCHAR(100),
-    email VARCHAR(100),
-    content TEXT,
-    approved TINYINT(1),
-    created_at TIMESTAMP,
-    FOREIGN KEY (post_id) REFERENCES posts(id)
-);
-```
-
-## 🔧 Configuration Options
-
-### Customize Posts Per Page
-Edit `config.php`:
-```php
-define('POSTS_PER_PAGE', 5); // Change to your preference
-```
-
-### Change Admin Password
-Edit `config.php`:
-```php
-define('ADMIN_PASS', 'your_strong_password');
-```
-
-### Update Blog Details
-Edit `index.php` header section:
-```php
-<h1>Your Blog Title</h1>
-<p class="tagline">Your blog tagline</p>
-```
-
-## 🚀 Deployment
-
-### Deploy to Shared Hosting
-
-1. Get FTP credentials from your host
-2. Upload all files to public_html directory
-3. Create MySQL database
-4. Import database.sql
-5. Update config.php with hosting database details
-6. Visit your domain
-
-### Deploy to VPS/Dedicated Server
-
-```bash
-# Connect via SSH
-ssh user@your-server.com
-
-# Install PHP and MySQL
-sudo apt-get install php mysql-server
-
-# Clone repository
-git clone https://github.com/Rithi2024/blog-platform-php-mysql.git
-cd blog-platform-php-mysql
-
-# Setup database
-mysql -u root -p < database.sql
-
-# Configure config.php
-nano config.php
-```
-
-### Using Docker
-
-```dockerfile
-FROM php:7.4-apache
-RUN docker-php-ext-install mysqli
-COPY . /var/www/html/
-```
+3. **Comments**
+   - Submit comment on a post
+   - Verify comment appears after admin approval
 
 ## 🐛 Troubleshooting
 
 | Issue | Solution |
 |-------|----------|
-| Database connection error | Check MySQL credentials in `config.php` |
-| Can't access admin panel | Verify database was imported correctly |
-| Posts not displaying | Ensure `POSTS_PER_PAGE` is set correctly |
-| Search not working | Check that MySQL `LIKE` queries work |
-| CSS not loading | Verify file permissions and paths |
+| **Cannot connect to database** | Verify SQL Server is running, check credentials in config.php |
+| **PDO sqlsrv driver not found** | Install PHP sqlsrv extension: `pecl install sqlsrv` |
+| **Port 8000 already in use** | Use `php -S localhost:8001` or kill the process |
+| **Admin login fails** | Check `BLOG_ADMIN_PASS` environment variable |
+| **Posts not showing** | Run `database_sqlserver.sql` to create tables and seed data |
+| **Search not working** | Verify posts table has sample data |
 
-## 📊 Sample Data
+## 📝 Environment Variables
 
-The database comes with 3 sample posts to get started:
-- "Welcome to My Blog"
-- "Getting Started with PHP"
-- "Database Design Best Practices"
-
-## 🎨 Customization
-
-### Change Color Scheme
-Edit `styles.css` - update color variables:
-```css
-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-}
+```
+BLOG_DB_SERVER      # SQL Server host (default: localhost)
+BLOG_DB_PORT        # SQL Server port (default: 1433)
+BLOG_DB_USER        # Database user (default: sa)
+BLOG_DB_PASS        # Database password (default: YourPassword123)
+BLOG_DB_NAME        # Database name (default: BlogDB)
+BLOG_BASE_URL       # Blog base URL (default: http://localhost:8000/)
+BLOG_ADMIN_PASS     # Admin panel password (default: admin123)
+BLOG_POSTS_PER_PAGE # Posts per page (default: 5)
 ```
 
-### Modify Blog Layout
-Edit `styles.css` grid settings:
-```css
-.posts-grid {
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-}
+## 🔄 Database Schema
+
+### posts table
+- `id` - Auto-incrementing primary key
+- `title` - Post title
+- `author` - Author name
+- `content` - Post content (HTML allowed)
+- `published` - Publication status (0/1)
+- `created_at` - Creation timestamp
+- `updated_at` - Last update timestamp
+
+### comments table
+- `id` - Auto-incrementing primary key
+- `post_id` - Foreign key to posts
+- `author` - Commenter name
+- `email` - Commenter email
+- `content` - Comment text
+- `approved` - Approval status (0/1)
+- `created_at` - Creation timestamp
+
+## 🚀 Deployment
+
+### Windows IIS
+1. Copy files to IIS wwwroot
+2. Configure SQL Server connection string
+3. Set up application pool identity with database access
+4. Enable directory browsing for admin.php
+
+### Linux (Apache)
+1. Copy files to `/var/www/html/bloghub`
+2. Ensure write permissions for error logs
+3. Configure Apache to run PHP
+4. Adjust connection string for Linux SQL Server connector
+
+### Docker (Optional)
+
+```dockerfile
+FROM php:7.4-apache
+RUN pecl install sqlsrv pdo_sqlsrv
+RUN docker-php-ext-enable sqlsrv pdo_sqlsrv
+COPY . /var/www/html/
 ```
-
-### Add Categories to Posts
-Add to `posts` table:
-```sql
-ALTER TABLE posts ADD COLUMN category VARCHAR(50);
-```
-
-## 📈 Future Enhancements
-
-- [ ] User authentication system
-- [ ] Comment approval system
-- [ ] Post categories
-- [ ] Tags system
-- [ ] Social sharing buttons
-- [ ] Email notifications
-- [ ] RSS feed
-- [ ] API endpoints
-
-## 🔗 Useful Resources
-
-- [PHP Documentation](https://www.php.net/docs.php)
-- [MySQL Manual](https://dev.mysql.com/doc/)
-- [W3Schools PHP Tutorial](https://www.w3schools.com/php/)
-- [HTML & CSS Guide](https://developer.mozilla.org/en-US/docs/Web/HTML)
-
-## 📝 Git Workflow
-
-```bash
-# Create feature branch
-git checkout -b feature/add-categories
-
-# Make changes
-git add .
-git commit -m "Add category support"
-
-# Push to GitHub
-git push origin feature/add-categories
-```
-
-## 🤝 Contributing
-
-Contributions are welcome! 
-
-1. Fork the repository
-2. Create feature branch
-3. Make your changes
-4. Commit and push
-5. Create Pull Request
-
-## 🎯 Best Practices
-
-### For Developers
-- Use prepared statements for production
-- Implement proper error handling
-- Add input validation
-- Use environment variables for config
-- Enable HTTPS on production
-
-### For Content
-- Write descriptive post titles
-- Use proper formatting
-- Include author information
-- Add metadata for SEO
-- Moderate comments
 
 ## 📄 License
 
-This project is open source and available under the MIT License.
-
-## 🙏 Acknowledgments
-
-- Built with PHP and MySQL
-- Inspired by WordPress and modern blogging platforms
-- Community feedback and contributions
+MIT - Feel free to use this project for personal or commercial purposes.
 
 ## 📞 Support
 
-For issues or questions:
-- Open an GitHub issue
-- Check documentation
-- Review sample posts
+For issues and questions, please refer to the documentation or troubleshooting section above.
 
 ---
 
-**Ready to start blogging? 🚀**
+**Build Your Blog Today! 🚀**
+```
 
-Last Updated: May 2026
+## Project Files
 
+```text
+BlogHub-PHP/
+├── admin.php
+├── config.php
+├── database.sql
+├── index.php
+├── post.php
+├── styles.css
+└── README.md
+```
+
+## Quality Checks
+
+Run PHP syntax checks:
+
+```bash
+php -l config.php
+php -l index.php
+php -l post.php
+php -l admin.php
+```
+
+## Security Notes
+
+- Public output is escaped with `htmlspecialchars`.
+- Database writes and dynamic reads use prepared statements.
+- Admin create, edit, and delete actions use a CSRF token.
+- Database credentials and the admin password can be provided through environment variables.
